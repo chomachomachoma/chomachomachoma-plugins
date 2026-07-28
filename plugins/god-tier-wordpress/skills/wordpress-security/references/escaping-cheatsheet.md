@@ -35,8 +35,10 @@ Escape at the last possible moment, in the exact context the value lands in. One
 
 ```php
 update_option( 'myplugin_webhook_url', esc_url_raw( $submitted_url ) );
-wp_redirect( esc_url_raw( $redirect_to ) );
+wp_safe_redirect( $redirect_to );
 ```
+
+`wp_redirect()` is only safe for URLs pointing at hosts you control — for anything derived from user input (a `redirect_to` param, etc.) use `wp_safe_redirect()`, which enforces the allowed-hosts list (`wp_validate_redirect()`) and falls back to the home URL for disallowed hosts, preventing open-redirect abuse.
 
 ## JavaScript context
 
@@ -92,11 +94,13 @@ echo wp_kses( $content, $allowed );
 
 ## CSS / inline styles
 
+`esc_attr()` and `wp_strip_all_tags()` are not CSS-aware escapers — they don't validate that a value is safe/well-formed CSS, only that it can't break out of an HTML attribute or inject tags. For a `style=""` attribute value built from a variable, use `safecss_filter_attr()` (the same function `wp_kses` uses internally to sanitize inline styles):
+
 ```php
-<div style="color: <?php echo esc_attr( $color ); ?>;">
+<div style="<?php echo esc_attr( safecss_filter_attr( "color: {$color};" ) ); ?>">
 ```
 
-Treat inline `style=""` as an attribute — `esc_attr()` covers it. For values inside a `<style>` block, strip tags and validate the value is actually CSS-shaped (e.g., a hex color via `sanitize_hex_color()` on input) rather than echoing free text.
+For values placed inside a `<style>` block, don't echo free text at all — require a validated, typed value first (e.g. `sanitize_hex_color()` for a color, or an integer plus an allow-listed unit like `px`/`%` for a dimension), then output that validated value.
 
 ## Quick reference table
 

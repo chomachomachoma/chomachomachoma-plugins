@@ -120,10 +120,10 @@ Full context → function mapping with examples: `references/escaping-cheatsheet
 | HTML body text | `esc_html()` |
 | HTML attribute value | `esc_attr()` |
 | URL (href/src) | `esc_url()` |
-| Inline `<script>` value / JS string | `esc_js()` (attribute-embedded JS only — prefer `wp_json_encode()` + `wp_add_inline_script()` for real data) |
+| Inside a JS string literal in an inline `<script>` | `esc_js()` (rare — prefer `wp_json_encode()` + `wp_add_inline_script()` for real data) |
 | Textarea content | `esc_textarea()` |
 | Trusted-ish HTML block | `wp_kses_post()` / `wp_kses()` |
-| `<style>` / inline CSS | `esc_attr()` in `style=""`, or `wp_strip_all_tags()` for raw values in `<style>` blocks |
+| `<style>` / inline CSS | `safecss_filter_attr()` for `style=""` values; validated typed values (e.g. `sanitize_hex_color()`, integer + unit) for anything in a `<style>` block |
 
 ## File upload handling
 
@@ -145,7 +145,7 @@ if ( $movefile && ! isset( $movefile['error'] ) ) {
 
 ## REST API: `permission_callback` is required
 
-Every `register_rest_route()` call MUST supply a `permission_callback` — omitting it triggers a `_doing_it_wrong` notice and, in WP ≤5.4 behavior, silently allows public access. `__return_true` is only correct for genuinely public read endpoints; state deliberately.
+Every `register_rest_route()` call MUST supply a `permission_callback` — omitting it triggers a `_doing_it_wrong` notice but does **not** block the request — the endpoint remains publicly accessible on every WP version. `__return_true` is only correct for genuinely public read endpoints; state deliberately.
 
 ```php
 register_rest_route( 'myplugin/v1', '/items/(?P<id>\d+)', array(

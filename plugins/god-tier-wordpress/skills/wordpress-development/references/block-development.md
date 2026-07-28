@@ -28,7 +28,6 @@ Detail for building custom Gutenberg blocks with `block.json` metadata (apiVersi
   },
   "usesContext": [ "postId" ],
   "providesContext": { "myplugin/noticeType": "type" },
-  "textDomain": "myplugin",
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
   "style": "file:./style-index.css",
@@ -150,4 +149,4 @@ add_action( 'init', function () {
 } );
 ```
 
-Or as a pattern file under `patterns/*.php` (auto-registered by the theme when it declares `Pattern Name`/`Slug` headers in the file's docblock) — the modern preferred approach for block themes.
+Or as a pattern file under `patterns/*.php` (auto-registered by the theme when it declares `Title`/`Slug` headers in the file's docblock) — the modern preferred approach for block themes.

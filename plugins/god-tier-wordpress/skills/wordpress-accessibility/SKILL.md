@@ -20,7 +20,7 @@ Every page needs identifiable regions so screen reader/keyboard users can jump d
 ```html
 <header class="site-header">…</header>
 <nav aria-label="Primary"><!-- wp_nav_menu() output --></nav>
-<main id="main" role="main">…</main>
+<main id="main">…</main>
 <aside aria-label="Sidebar">…</aside>
 <footer class="site-footer">…</footer>
 ```
@@ -79,7 +79,7 @@ It must be visually hidden by default but become visible on `:focus` (not `displ
 
 - Every meaningful `<img>` has a descriptive `alt` attribute: `<img src="..." alt="<?php echo esc_attr( $description ); ?>" />`.
 - Purely decorative images get `alt=""` (empty, not omitted) so screen readers skip them — never omit the attribute entirely.
-- `wp_get_attachment_image()` pulls the stored alt text automatically; don't override it with generic filler like `"image"` or the filename.
+- `wp_get_attachment_image()` pulls the stored alt text automatically; don't override it with generic filler like `"image"` or the filename. The narrow exception is when the stored alt is missing or wrong for the context (e.g., a site logo whose attachment alt text is blank) — see `references/wcag-checklist.md` for that case.
 - Icon-only buttons need an accessible name via visually-hidden text or `aria-label`, not just an icon:
 
 ```html

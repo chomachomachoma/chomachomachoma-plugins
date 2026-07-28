@@ -23,7 +23,7 @@ function myplugin_append_notice( $content ) {
 }
 ```
 
-- Use `add_action`/`add_filter` priority (default 10) and accepted-args explicitly when order or extra params matter: `add_filter( 'woocommerce_price_html', 'cb', 20, 2 );`
+- Use `add_action`/`add_filter` priority (default 10) and accepted-args explicitly when order or extra params matter: `add_filter( 'the_content', 'cb', 20, 1 );`
 - Remove hooks with the exact same callback reference, priority, and (for object methods) instance — `remove_action( 'wp_head', array( $this, 'inject' ), 10 );` fails silently if any of those differ.
 - Fire your own action/filter hooks in reusable code so other plugins/themes can extend it: `do_action( 'myplugin_after_save', $post_id );`, `apply_filters( 'myplugin_settings', $settings );`.
 - Common lifecycle hooks, in order: `plugins_loaded` → `init` → `widgets_init` → `wp_loaded` → `template_redirect` → `wp_enqueue_scripts` → `wp_head` → `wp_footer`. Register post types/taxonomies on `init`, not earlier (i18n functions aren't ready before `init`).
@@ -133,7 +133,7 @@ $query = new WP_Query( array(
 - Never use `posts_per_page => -1` on user-facing queries without a real bound — it can exhaust memory on large sites.
 - Never query with raw `$wpdb` when `WP_Query`/`get_posts` covers it; drop to `$wpdb` (with `prepare()`) only for aggregates/joins core APIs can't express.
 - Always `wp_reset_postdata()` after a custom secondary loop that used `the_post()`.
-- Prefer `pre_get_query` filter to modify the *main* query over replacing it — avoids duplicate queries.
+- Prefer the `pre_get_posts` action to modify the *main* query in place (`if ( $query->is_main_query() && ! is_admin() )`) rather than instantiating a second `WP_Query` — avoids duplicate queries.
 
 ## Internationalization (i18n)
 
@@ -147,7 +147,7 @@ $query = new WP_Query( array(
 - Prefix every global function, class, hook name, option key, meta key, and shortcode with a unique namespace (plugin/theme slug): `myplugin_`, `MyPlugin_`, or a PHP namespace `MyPlugin\`. Never define bare global functions like `save_settings()`.
 - Constants: `MYPLUGIN_VERSION`, `MYPLUGIN_PATH` — all caps, prefixed.
 - Hook names you invent: `myplugin_before_render`, `myplugin/settings/updated` — keep consistent separators within one codebase.
-- Match the plugin/theme directory slug used in `plugin.json`'s `source` and any distribution slug — mismatches break asset URLs and update checks.
+- Match the plugin/theme directory slug consistently across the plugin directory slug, the main file's `Text Domain` header, and the theme's `style.css` header/directory name — mismatches break asset URLs and update checks.
 
 ## When to load the reference files
 

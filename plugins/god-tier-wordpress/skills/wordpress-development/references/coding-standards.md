@@ -95,7 +95,7 @@ return apply_filters( 'myplugin_price', $price, $product_id );
 - No closing `?>` at the end of a pure-PHP file (avoids accidental whitespace/header errors).
 - Use strict, explicit string concatenation with a space around `.`: `'Hello ' . $name . '!'`.
 - Prefer `array()` long form over `[]` in older WPCS-strict codebases; both are accepted by modern WPCS but stay consistent within one file/project — check the project's `.phpcs.xml` if present.
-- Alignment: don't hand-align `=>` or `=` across multiple lines (creates large diffs); let the formatter handle it.
+- Alignment: align `=>` in multi-line associative arrays per `WordPress.Arrays.MultipleStatementAlignment` — phpcs will flag misaligned array arrows.
 
 ## JS: `@wordpress/eslint-plugin` essentials
 

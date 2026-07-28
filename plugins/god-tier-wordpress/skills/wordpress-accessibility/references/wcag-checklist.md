@@ -7,7 +7,7 @@ Organized by WCAG success criterion. Use this when auditing a theme, plugin, or 
 ### 1.1.1 Non-text Content (A)
 
 - **Fail**: `<img src="<?php echo esc_url( $logo ); ?>">` with no `alt`.
-- **Pass**: `<?php echo wp_get_attachment_image( $logo_id, 'full', false, array( 'alt' => get_bloginfo( 'name' ) ) ); ?>` or explicit `alt="<?php echo esc_attr( $description ); ?>"`.
+- **Pass**: `<?php echo wp_get_attachment_image( $logo_id, 'full', false, array( 'alt' => get_bloginfo( 'name' ) ) ); ?>` (overriding alt here is correct specifically for a site logo, where the stored attachment alt text is typically missing or generic — the site name is the meaningful description) or explicit `alt="<?php echo esc_attr( $description ); ?>"`.
 - **Pass (decorative)**: background/spacer images get `alt=""`, never omitted.
 
 ### 1.3.1 Info and Relationships (A)
@@ -63,7 +63,7 @@ Organized by WCAG success criterion. Use this when auditing a theme, plugin, or 
 
 ### 2.4.2 Page Titled (A)
 
-- **Pass**: every template calls `wp_head()` (which outputs `<title>` via `wp_title`/`_wp_render_title_tag`) — never hardcode a static `<title>` that doesn't reflect the current page.
+- **Pass**: every template calls `wp_head()`, and the theme declares `add_theme_support( 'title-tag' )` so core outputs the `<title>` tag automatically — never hardcode a static `<title>` that doesn't reflect the current page.
 
 ### 2.4.3 Focus Order (A)
 
