@@ -1,0 +1,32 @@
+{
+  "name": "claude-plugins",
+  "owner": {
+    "name": "Chris Choma",
+    "email": "c.j.choma@gmail.com",
+    "url": "https://github.com/chomachomachoma"
+  },
+  "metadata": {
+    "description": "Chris Choma's public Claude Code plugin library",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "god-tier-wordpress",
+      "source": "./plugins/god-tier-wordpress",
+      "description": "All-knowing WordPress developer for core, theme, and plugin work — enforces security best practices, WordPress coding standards, and accessibility guidelines.",
+      "version": "1.0.0",
+      "author": { "name": "Chris Choma", "email": "c.j.choma@gmail.com" },
+      "category": "development",
+      "keywords": ["wordpress", "php", "security", "accessibility", "code-review"]
+    },
+    {
+      "name": "doc-assistant",
+      "source": "./plugins/doc-assistant",
+      "description": "Token-efficient documentation manager: creates an indexed docs/ tree, updates it incrementally as code changes, and reminds you when docs drift.",
+      "version": "1.0.0",
+      "author": { "name": "Chris Choma", "email": "c.j.choma@gmail.com" },
+      "category": "productivity",
+      "keywords": ["documentation", "docs", "index", "context-efficiency"]
+    }
+  ]
+}
