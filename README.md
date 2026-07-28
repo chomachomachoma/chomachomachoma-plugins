@@ -8,8 +8,8 @@ Add the marketplace once, then install whichever plugin(s) you want — they're 
 
 ```
 /plugin marketplace add chomachomachoma/claude-plugins
-/plugin install god-tier-wordpress@claude-plugins
-/plugin install doc-assistant@claude-plugins
+/plugin install god-tier-wordpress@choma-plugins
+/plugin install doc-assistant@choma-plugins
 ```
 
 ### Local development / testing
@@ -18,8 +18,8 @@ To try the marketplace from a local clone instead of GitHub — useful when deve
 
 ```
 /plugin marketplace add /path/to/claude-plugins
-/plugin install god-tier-wordpress@claude-plugins
-/plugin install doc-assistant@claude-plugins
+/plugin install god-tier-wordpress@choma-plugins
+/plugin install doc-assistant@choma-plugins
 ```
 
 Point `/path/to/claude-plugins` at your local checkout of this repo. Everything else works the same as installing from GitHub.
