@@ -43,6 +43,7 @@ nodocs="$(mktemp -d)"
 printf '%s\n' "/p/src/a.php" > "$TMPDIR/claude-doc-assistant/s4.edits"
 out=$(cd "$nodocs" && echo '{"session_id":"s4","stop_hook_active":false}' | bash "$here/check-docs-drift.sh")
 check "no index -> silent" "" "$out"
+check "no index -> state cleared" "no" "$([ -f "$TMPDIR/claude-doc-assistant/s4.edits" ] && echo yes || echo no)"
 
 # 8. markdown-only edits (e.g. README) -> silent
 printf '%s\n' "/p/README.md" > "$TMPDIR/claude-doc-assistant/s5.edits"

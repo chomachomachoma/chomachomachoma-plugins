@@ -12,6 +12,8 @@ else
   file_path=$(printf '%s' "$input" | sed -n 's/.*"file_path"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -n 1)
 fi
 
+session_id=$(printf '%s' "${session_id:-}" | tr -cd 'A-Za-z0-9._-')
+
 [ -n "${session_id:-}" ] && [ -n "${file_path:-}" ] || exit 0
 state_dir="${TMPDIR:-/tmp}/claude-doc-assistant"
 mkdir -p "$state_dir" 2>/dev/null || exit 0

@@ -16,6 +16,8 @@ else
   esac
 fi
 
+session_id=$(printf '%s' "${session_id:-}" | tr -cd 'A-Za-z0-9._-')
+
 [ "${stop_active:-false}" = "true" ] && exit 0
 [ -n "${session_id:-}" ] || exit 0
 state_file="${TMPDIR:-/tmp}/claude-doc-assistant/$session_id.edits"
