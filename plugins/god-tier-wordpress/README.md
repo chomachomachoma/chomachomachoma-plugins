@@ -37,7 +37,7 @@ Reviews the current diff (or specified files) against WordPress coding standards
 Runs a focused pass over the given file(s) for sanitization gaps, missing escaping, missing nonce/capability checks, unsafe `$wpdb` queries, and REST endpoints missing `permission_callback`.
 
 ```
-/wp-scaffold block myplugin/notice
+/wp-scaffold block "Price Tag"
 ```
 Generates a new block (or plugin/theme, depending on the arguments) following the `block.json` apiVersion 3 conventions, correct enqueueing, and i18n setup documented in `wordpress-development`.
 

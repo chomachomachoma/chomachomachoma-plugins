@@ -4,7 +4,7 @@ Chris Choma's public plugin library for [Claude Code](https://claude.com/claude-
 
 ## Installation
 
-Add the marketplace once, then install whichever plugin(s) you want — they're fully independent, so pick either one or both:
+Add the marketplace once, then install whichever plugin(s) you want — they're fully independent, so pick either one or both. The marketplace itself is named `choma-plugins` (not `claude-plugins`, which the validator rejects as an official-sounding name), so install commands use the `@choma-plugins` suffix even though the repo is `claude-plugins`:
 
 ```
 /plugin marketplace add chomachomachoma/claude-plugins
@@ -28,8 +28,8 @@ Point `/path/to/claude-plugins` at your local checkout of this repo. Everything 
 
 | Plugin | What it does | Components |
 |---|---|---|
-| [`god-tier-wordpress`](plugins/god-tier-wordpress) | All-knowing WordPress developer for core, theme, and plugin work — auto-loads WordPress-specific knowledge and enforces security, coding-standards, and accessibility rules while you write or review code. | 3 skills (`wordpress-development`, `wordpress-security`, `wordpress-accessibility`), `wp-reviewer` read-only agent, 3 commands (`/wp-review`, `/wp-security-audit`, `/wp-scaffold`) |
-| [`doc-assistant`](plugins/doc-assistant) | Token-efficient documentation manager — maintains an indexed `docs/` tree, updates it incrementally from diffs, and reminds you (non-blockingly) when docs drift from code. | `managing-docs` skill, `doc-manager` agent, 3 commands (`/docs-init`, `/docs-update`, `/docs-check`), Stop/PostToolUse drift-reminder hooks |
+| [`god-tier-wordpress`](plugins/god-tier-wordpress) | All-knowing WordPress developer for core, theme, and plugin work — auto-loads WordPress-specific knowledge and enforces security, coding-standards, and accessibility rules while you write or review code. | 3 skills (`wordpress-development`, `wordpress-security`, `wordpress-accessibility`), `wp-reviewer` agent (read-only by construction — no Write/Edit tools; Bash for git/grep inspection only), 3 commands (`/wp-review`, `/wp-security-audit`, `/wp-scaffold`) |
+| [`doc-assistant`](plugins/doc-assistant) | Token-efficient documentation manager — maintains an indexed `docs/` tree, updates it incrementally from diffs, and reminds you when docs drift from code. | `managing-docs` skill, `doc-manager` agent, 3 commands (`/docs-init`, `/docs-update`, `/docs-check`), Stop/PostToolUse drift-reminder hooks |
 
 ## god-tier-wordpress
 
@@ -48,7 +48,7 @@ Reviews the current diff against WordPress coding standards, security, and acces
 Runs a focused security pass over the given file(s): sanitization gaps, missing escaping, missing nonce/capability checks, unsafe `$wpdb` queries, REST endpoints missing `permission_callback`.
 
 ```
-/wp-scaffold block myplugin/notice
+/wp-scaffold block "Price Tag"
 ```
 Scaffolds a new block (or `plugin`/`theme`, depending on the arguments) following the conventions documented in `wordpress-development`.
 
@@ -56,7 +56,7 @@ You can also skip the commands and just ask normally — e.g. "add a settings pa
 
 ## doc-assistant
 
-A token-efficient documentation manager. Instead of one giant file read in full on every doc-related task, it maintains a `docs/` tree: a cheap `docs/INDEX.md` table of contents plus focused per-area detail files, so an agent reads a few hundred tokens to find what's relevant and then opens only the file(s) that matter. The `doc-manager` agent creates the tree or updates it incrementally from a diff; a companion Stop/PostToolUse hook nudges you (at most once per unacknowledged edit batch, non-blocking) when code changed but docs didn't — and only in projects that already have `docs/INDEX.md`.
+A token-efficient documentation manager. Instead of one giant file read in full on every doc-related task, it maintains a `docs/` tree: a cheap `docs/INDEX.md` table of contents plus focused per-area detail files, so an agent reads a few hundred tokens to find what's relevant and then opens only the file(s) that matter. The `doc-manager` agent creates the tree or updates it incrementally from a diff; a companion Stop/PostToolUse hook interrupts the session's stop once per unacknowledged batch of edits with a reminder when code changed but docs didn't — it never edits files, never fails the session, and tells Claude to simply finish if docs are unaffected — and only fires in projects that already have `docs/INDEX.md`.
 
 **Usage examples:**
 

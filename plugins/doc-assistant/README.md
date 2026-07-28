@@ -24,6 +24,7 @@ This contract is the source of truth across the whole plugin — the skill defin
 | `/docs-init` | Command | Bootstraps `docs/INDEX.md` and per-area docs for a project that doesn't have one yet. |
 | `/docs-update` | Command | Gathers recent changes (git diff/staged/untracked, or a docs-vs-code comparison outside git) and updates only the affected docs. |
 | `/docs-check` | Command | Read-only drift report — stale, missing, and orphaned docs — edits nothing, suggests `/docs-update` when it finds drift. |
+| Hooks (PostToolUse + Stop) | Hooks | End-of-session reminder when code changed but `docs/` didn't. |
 
 ## Usage examples
 
@@ -46,4 +47,4 @@ Because `managing-docs` auto-loads based on its description triggers, you can al
 
 ## Docs-drift reminder hook
 
-A companion hook (added separately from this plugin's core components) reminds you at the end of a session if code changed but `docs/` didn't — a nudge to run `/docs-update` before you forget what changed. It's advisory only: it never edits anything itself. To disable it, uninstall this plugin.
+A companion hook reminds you at the end of a session if code changed but `docs/` didn't — a nudge to run `/docs-update` before you forget what changed. It interrupts the session's stop once with a reminder; it never edits files, never fails the session, and tells Claude to simply finish if docs are unaffected. To disable it, uninstall this plugin.
