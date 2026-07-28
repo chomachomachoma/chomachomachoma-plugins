@@ -1,5 +1,6 @@
 ---
 description: Read-only check for documentation drift — reports stale, missing, and orphaned docs without editing anything
+allowed-tools: Read, Grep, Glob, Bash(git diff:*), Bash(git log:*), Bash(git status:*), Bash(git ls-files:*)
 ---
 
 Check the project's documentation for drift. This command is **read-only**: it never edits `docs/` or any code, and it does not dispatch the `doc-manager` agent (which is an editing agent) — do this analysis directly in the main session.
