@@ -2,6 +2,10 @@
 
 Chris Choma's public plugin library for [Claude Code](https://claude.com/claude-code) — a Claude Code marketplace with two independent plugins: a WordPress development expert that enforces security, coding-standards, and accessibility rules automatically, and a token-efficient documentation assistant that keeps a `docs/` tree in sync with your code as it changes.
 
+<p align="center">
+  <img src="assets/demo.gif" alt="Animated demo: adding the marketplace, installing both plugins, then running /wp-review and /docs-update in Claude Code" width="720">
+</p>
+
 ## Installation
 
 Add the marketplace once, then install whichever plugin(s) you want — they're fully independent, so pick either one or both. The marketplace itself is named `choma-plugins` (not `claude-plugins`, which the validator rejects as an official-sounding name), so install commands use the `@choma-plugins` suffix even though the repo is `claude-plugins`:
