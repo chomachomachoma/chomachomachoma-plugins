@@ -1,4 +1,4 @@
-# claude-plugins
+# chomachomachoma-plugins
 
 Chris Choma's public plugin library for [Claude Code](https://claude.com/claude-code) — a Claude Code marketplace with two independent plugins: a WordPress development expert that enforces security, coding-standards, and accessibility rules automatically, and a token-efficient documentation assistant that keeps a `docs/` tree in sync with your code as it changes.
 
@@ -8,10 +8,10 @@ Chris Choma's public plugin library for [Claude Code](https://claude.com/claude-
 
 ## Installation
 
-Add the marketplace once, then install whichever plugin(s) you want — they're fully independent, so pick either one or both. The marketplace itself is named `choma-plugins` (not `claude-plugins`, which the validator rejects as an official-sounding name), so install commands use the `@choma-plugins` suffix even though the repo is `claude-plugins`:
+Add the marketplace once, then install whichever plugin(s) you want — they're fully independent, so pick either one or both. The marketplace this repo registers is named `choma-plugins`, so install commands use the `@choma-plugins` suffix:
 
 ```
-/plugin marketplace add chomachomachoma/claude-plugins
+/plugin marketplace add chomachomachoma/chomachomachoma-plugins
 /plugin install god-tier-wordpress@choma-plugins
 /plugin install doc-assistant@choma-plugins
 ```
@@ -21,12 +21,12 @@ Add the marketplace once, then install whichever plugin(s) you want — they're 
 To try the marketplace from a local clone instead of GitHub — useful when developing or reviewing changes before they're pushed:
 
 ```
-/plugin marketplace add /path/to/claude-plugins
+/plugin marketplace add /path/to/chomachomachoma-plugins
 /plugin install god-tier-wordpress@choma-plugins
 /plugin install doc-assistant@choma-plugins
 ```
 
-Point `/path/to/claude-plugins` at your local checkout of this repo. Everything else works the same as installing from GitHub.
+Point `/path/to/chomachomachoma-plugins` at your local checkout of this repo. Everything else works the same as installing from GitHub.
 
 ## Plugins
 

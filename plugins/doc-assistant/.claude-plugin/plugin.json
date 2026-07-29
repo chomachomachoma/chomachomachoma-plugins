@@ -3,7 +3,7 @@
   "description": "Token-efficient documentation manager: creates an indexed docs/ tree, updates it incrementally as code changes, and reminds you when docs drift.",
   "version": "1.0.0",
   "author": { "name": "Chris Choma", "email": "c.j.choma@gmail.com" },
-  "homepage": "https://github.com/chomachomachoma/claude-plugins",
+  "homepage": "https://github.com/chomachomachoma/chomachomachoma-plugins",
   "license": "MIT",
   "keywords": ["documentation", "docs", "index"]
 }
