@@ -8,12 +8,12 @@ Chris Choma's public plugin library for [Claude Code](https://claude.com/claude-
 
 ## Installation
 
-Add the marketplace once, then install whichever plugin(s) you want — they're fully independent, so pick either one or both. The marketplace this repo registers is named `choma-plugins`, so install commands use the `@choma-plugins` suffix:
+Add the marketplace once, then install whichever plugin(s) you want — they're fully independent, so pick either one or both:
 
 ```
 /plugin marketplace add chomachomachoma/chomachomachoma-plugins
-/plugin install god-tier-wordpress@choma-plugins
-/plugin install doc-assistant@choma-plugins
+/plugin install god-tier-wordpress@chomachomachoma-plugins
+/plugin install doc-assistant@chomachomachoma-plugins
 ```
 
 ### Local development / testing
@@ -22,8 +22,8 @@ To try the marketplace from a local clone instead of GitHub — useful when deve
 
 ```
 /plugin marketplace add /path/to/chomachomachoma-plugins
-/plugin install god-tier-wordpress@choma-plugins
-/plugin install doc-assistant@choma-plugins
+/plugin install god-tier-wordpress@chomachomachoma-plugins
+/plugin install doc-assistant@chomachomachoma-plugins
 ```
 
 Point `/path/to/chomachomachoma-plugins` at your local checkout of this repo. Everything else works the same as installing from GitHub.
