@@ -1,7 +1,7 @@
 {
   "name": "e2e-harness",
   "description": "Browser-testing harness for visual validation — writes and runs Playwright tests against your running app, captures screenshots Claude actually looks at, and grows a persistent e2e regression suite in your project.",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "author": { "name": "Chris Choma", "email": "c.j.choma@gmail.com" },
   "homepage": "https://github.com/chomachomachoma/chomachomachoma-plugins",
   "license": "MIT",

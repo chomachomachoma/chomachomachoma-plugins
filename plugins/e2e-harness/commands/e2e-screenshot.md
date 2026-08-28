@@ -21,7 +21,7 @@ The optional `[name]` becomes the filename; otherwise derive a kebab-case name f
 
 ## 2. Ensure prerequisites
 
-Playwright must be available per the skill's setup ladder (consent before any install), and the app reachable per its dev-server protocol — resolve a bare route against the detected base URL. Ensure `e2e/screenshots/` and its `.gitignore` exist per the directory contract.
+Playwright must be available per the skill's setup ladder (consent before any install), and the app reachable per its dev-server protocol — resolve a bare route against the detected base URL. Ensure `e2e/screenshots/` and its `.gitignore` exist per the directory contract. Note the difference between the two capture paths: a headless CLI one-off is the single sanctioned exception to the ladder's install requirement — it may run off a transient npx download with nothing installed. The capture helper imports `@playwright/test` and therefore needs it actually present in `node_modules` — if it isn't and headed was requested, run the ladder's install step (with consent) first; in a Node project that's a root devDependency, never an `e2e/package.json`. If the user declines the install, say headed isn't possible without it and offer the headless CLI capture instead.
 
 ## 3. Capture
 
