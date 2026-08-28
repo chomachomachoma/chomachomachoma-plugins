@@ -76,6 +76,7 @@ A model spec lives in `references/templates.md`.
 - Node projects with the generated config: `npx playwright test --config e2e/playwright.config.ts [spec-file]` from the project root. Adopted existing config: plain `npx playwright test [spec-file]`. Non-Node: `cd e2e && npx playwright test [spec-file]`.
 - On failure, classify before editing anything: **app bug** (the change broke the page — fix the app), **test bug** (bad locator, wrong assumption — fix the spec), or **environment bug** (server not running, wrong `E2E_BASE_URL` — fix the environment). Misclassifying wastes the whole loop.
 - Failure artifacts (screenshots, traces) land in `e2e/screenshots/artifacts/` — read those PNGs too; the failure screenshot usually shows exactly what went wrong.
+- **Headless by default, headed only on request.** When the user asks to watch the run (`--headed`, "run it headed"): Playwright → append `--headed` to the run command; Puppeteer mode → run with `E2E_HEADED=1` (the flow-script template reads it), e.g. `E2E_HEADED=1 E2E_BASE_URL=<url> node e2e/login.e2e.mjs`. Headed needs a display — check before launching (`DISPLAY`/`WAYLAND_DISPLAY` unset on Linux means none; SSH/CI), and if there is none, say so and run headless instead. Never switch to headed on your own: the screenshots are the evidence, not the live window.
 
 ## Visual validation protocol
 
@@ -116,6 +117,7 @@ The path list is the user's map to the evidence — omitting it is a reporting f
 | Project already has a Playwright config | Adopt it; add only `e2e/screenshots/` + `.gitignore` |
 | Project uses Puppeteer, no Playwright | Ask which framework; recommend Playwright, honor Puppeteer mode if chosen |
 | User wants setup up front | Point at (or follow) `/e2e-setup` |
+| User asks to watch the run | Headed: `--headed` (Playwright) / `E2E_HEADED=1` (Puppeteer) — needs a display; still read the PNGs |
 | Non-Node project | Self-contained `e2e/package.json`; never create a root one |
 | Need the app running | Probe for a running server first; start one in the background only if none |
 | Run failed | Classify app / test / environment bug; read the artifact PNGs |

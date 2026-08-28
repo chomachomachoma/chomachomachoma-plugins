@@ -83,7 +83,7 @@ import assert from 'node:assert/strict';
 import puppeteer from 'puppeteer';
 
 const BASE = process.env.E2E_BASE_URL || '<DETECTED_URL>';
-const browser = await puppeteer.launch();
+const browser = await puppeteer.launch({ headless: process.env.E2E_HEADED !== '1' });
 try {
   const page = await browser.newPage();
   const pageErrors = [];

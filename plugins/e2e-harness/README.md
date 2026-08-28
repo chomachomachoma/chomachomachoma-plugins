@@ -62,4 +62,5 @@ The entire value of the harness is that the *main session* looks at the screensh
 - Nothing is installed without your explicit go-ahead — you choose the browsers (Chromium recommended), and the first browser download is large (~150MB+).
 - If your project already uses Puppeteer, the harness asks before adding Playwright and can run in Puppeteer mode instead — plain Node flow scripts with the same screenshot conventions.
 - The harness reuses an already-running dev server when it finds one; if it starts one itself, it tells you so in the report.
+- Runs are headless by default. Ask for headed (`/e2e --headed …`, or just say "run it headed") to watch the browser live — needs a display, and Claude still validates from the screenshots.
 - Screenshot paths are always listed in the final response, pass or fail, so you can open the evidence yourself.

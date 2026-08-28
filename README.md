@@ -91,7 +91,7 @@ A browser-testing harness for visual validation. Claude writes and runs Playwrig
 ```
 /e2e signup flow — fill the form and submit
 ```
-Bootstraps Playwright if needed (asking before installing anything), writes or extends `e2e/signup.spec.ts`, runs it against your dev server, reads the captured screenshots, and reports a verdict plus every screenshot's absolute path. With no arguments, `/e2e` infers what to validate from your recent UI changes.
+Bootstraps Playwright if needed (asking before installing anything), writes or extends `e2e/signup.spec.ts`, runs it against your dev server, reads the captured screenshots, and reports a verdict plus every screenshot's absolute path. With no arguments, `/e2e` infers what to validate from your recent UI changes; add `--headed` to watch the browser live (headless by default).
 
 ```
 /e2e-screenshot /settings
