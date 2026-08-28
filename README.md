@@ -1,6 +1,6 @@
 # chomachomachoma-plugins
 
-Chris Choma's public plugin library for [Claude Code](https://claude.com/claude-code) — a Claude Code marketplace with two independent plugins: a WordPress development expert that enforces security, coding-standards, and accessibility rules automatically, and a token-efficient documentation assistant that keeps a `docs/` tree in sync with your code as it changes.
+Chris Choma's public plugin library for [Claude Code](https://claude.com/claude-code) — a Claude Code marketplace with three independent plugins: a WordPress development expert that enforces security, coding-standards, and accessibility rules automatically, a token-efficient documentation assistant that keeps a `docs/` tree in sync with your code as it changes, and a browser-testing harness that visually validates UI work with Playwright screenshots Claude actually looks at.
 
 <p align="center">
   <img src="assets/demo.gif" alt="Animated demo: adding the marketplace, installing both plugins, then running /wp-review and /docs-update in Claude Code" width="720">
@@ -8,12 +8,13 @@ Chris Choma's public plugin library for [Claude Code](https://claude.com/claude-
 
 ## Installation
 
-Add the marketplace once, then install whichever plugin(s) you want — they're fully independent, so pick either one or both:
+Add the marketplace once, then install whichever plugin(s) you want — they're fully independent, so pick any combination:
 
 ```
 /plugin marketplace add chomachomachoma/chomachomachoma-plugins
 /plugin install god-tier-wordpress@chomachomachoma-plugins
 /plugin install doc-assistant@chomachomachoma-plugins
+/plugin install e2e-harness@chomachomachoma-plugins
 ```
 
 ### Local development / testing
@@ -24,6 +25,7 @@ To try the marketplace from a local clone instead of GitHub — useful when deve
 /plugin marketplace add /path/to/chomachomachoma-plugins
 /plugin install god-tier-wordpress@chomachomachoma-plugins
 /plugin install doc-assistant@chomachomachoma-plugins
+/plugin install e2e-harness@chomachomachoma-plugins
 ```
 
 Point `/path/to/chomachomachoma-plugins` at your local checkout of this repo. Everything else works the same as installing from GitHub.
@@ -34,6 +36,7 @@ Point `/path/to/chomachomachoma-plugins` at your local checkout of this repo. Ev
 |---|---|---|
 | [`god-tier-wordpress`](plugins/god-tier-wordpress) | All-knowing WordPress developer for core, theme, and plugin work — auto-loads WordPress-specific knowledge and enforces security, coding-standards, and accessibility rules while you write or review code. | 3 skills (`wordpress-development`, `wordpress-security`, `wordpress-accessibility`), `wp-reviewer` agent (read-only by construction — no Write/Edit tools; Bash for git/grep inspection only), 3 commands (`/wp-review`, `/wp-security-audit`, `/wp-scaffold`) |
 | [`doc-assistant`](plugins/doc-assistant) | Token-efficient documentation manager — maintains an indexed `docs/` tree, updates it incrementally from diffs, and reminds you when docs drift from code. | `managing-docs` skill, `doc-manager` agent, 3 commands (`/docs-init`, `/docs-update`, `/docs-check`), Stop/PostToolUse drift-reminder hooks |
+| [`e2e-harness`](plugins/e2e-harness) | Browser-testing harness for visual validation — writes and runs Playwright tests, captures screenshots Claude reads before claiming anything works, and grows a persistent `e2e/` regression suite in your project. | `validating-in-browser` skill, 2 commands (`/e2e`, `/e2e-screenshot`) |
 
 ## god-tier-wordpress
 
@@ -78,6 +81,24 @@ Looks at your current diff/staged/untracked changes and updates only the detail 
 /docs-check
 ```
 Read-only drift report — stale, missing, and orphaned docs — makes no edits, and suggests `/docs-update` if it finds drift.
+
+## e2e-harness
+
+A browser-testing harness for visual validation. Claude writes and runs Playwright tests against your running app, captures screenshots at key states, and reads the screenshots before claiming the UI works — a green exit code alone never counts as a visual pass. Specs persist in an `e2e/` directory so each validation grows a regression suite, while a self-contained `e2e/screenshots/.gitignore` keeps every screenshot out of your repo. Screenshot paths are always listed in the final response so you can open the evidence yourself.
+
+**Usage examples:**
+
+```
+/e2e signup flow — fill the form and submit
+```
+Bootstraps Playwright if needed (asking before installing anything), writes or extends `e2e/signup.spec.ts`, runs it against your dev server, reads the captured screenshots, and reports a verdict plus every screenshot's absolute path. With no arguments, `/e2e` infers what to validate from your recent UI changes.
+
+```
+/e2e-screenshot /settings
+```
+One-off full-page capture of a route in your running app — inspects the image and reports its path, no test file written.
+
+You can also skip the commands — after Claude changes UI code, the `validating-in-browser` skill loads automatically when it needs to visually confirm the work.
 
 ## Contributing
 

@@ -27,6 +27,15 @@
       "author": { "name": "Chris Choma", "email": "c.j.choma@gmail.com" },
       "category": "productivity",
       "keywords": ["documentation", "docs", "index", "context-efficiency"]
+    },
+    {
+      "name": "e2e-harness",
+      "source": "./plugins/e2e-harness",
+      "description": "Browser-testing harness for visual validation — writes and runs Playwright tests against your running app, captures screenshots Claude actually looks at, and grows a persistent e2e regression suite in your project.",
+      "version": "1.0.0",
+      "author": { "name": "Chris Choma", "email": "c.j.choma@gmail.com" },
+      "category": "testing",
+      "keywords": ["playwright", "e2e", "browser-testing", "screenshots", "visual-validation", "regression"]
     }
   ]
 }
