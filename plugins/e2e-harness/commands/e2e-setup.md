@@ -6,21 +6,21 @@ Bootstrap the e2e harness explicitly, without running a test. The `validating-in
 
 ## 1. Detect what's already here
 
-Walk the skill's setup-detection ladder and report what you find before changing anything: an existing harness, an existing Playwright config, an installed `@playwright/test`, an installed Puppeteer, or nothing. If the harness is already fully set up, say so and stop — there's nothing to do.
+Run `node "<skill base dir>/scripts/setup.mjs" --check` from the project root — it reports the framework, config, cached browsers, display, and every contract file in one shot. Report what it found. If the harness is already complete, say so and stop — there's nothing to do.
 
 ## 2. Choose the framework
 
 - Playwright already present (installed or configured) → use it; no question needed.
-- Puppeteer present but not Playwright → ask the user which to use (AskUserQuestion), recommending Playwright for its auto-waiting, built-in test runner and assertions, and multi-browser support, while offering to reuse their existing Puppeteer. Puppeteer chosen → Puppeteer mode: create the `e2e/` tree and `e2e/screenshots/.gitignore` per the contract (including its skip-if-root-gitignore-covers-it exception), no installs, and skip step 3.
-- Neither present → Playwright, via the ladder's install steps.
+- Puppeteer present but not Playwright → ask the user which to use (AskUserQuestion), recommending Playwright for its auto-waiting, built-in test runner and assertions, and multi-browser support, while offering to reuse their existing Puppeteer. Puppeteer chosen → Puppeteer mode: run `setup.mjs` to scaffold, no installs, and skip step 3.
+- Neither present → Playwright, via the skill's install decision.
 
 ## 3. Confirm the install and pick browsers
 
-Before installing anything, ask in one prompt: a go-ahead for `@playwright/test` plus the browser download (large, ~150MB+, slow the first time), and which browsers to install — Chromium (recommended default), Firefox, and/or WebKit. Then install per the ladder (package manager from the lockfile; non-Node projects get the self-contained `e2e/package.json`).
+Before installing anything, ask in one prompt: a go-ahead for `@playwright/test` plus the browser download (large, ~150MB+, slow the first time), and which browsers to install — Chromium (recommended default), Firefox, and/or WebKit. Then install per the skill's install decision (package manager from the lockfile; non-Node projects install from inside `e2e/`).
 
 ## 4. Create the contract
 
-Create whatever the ladder calls for that doesn't already exist: the `e2e/` directory, the generated config (with `projects` entries if browsers beyond Chromium were chosen), `e2e/screenshots/` with its `.gitignore`, and `e2e/capture.mjs` copied verbatim from the skill's `scripts/` directory (never written by hand). Never clobber an existing config, and never touch the root `.gitignore`.
+Run `node "<skill base dir>/scripts/setup.mjs"` (add `--base-url <detected url>` if `--check` said a config is pending) — it idempotently creates the `e2e/` tree, `screenshots/` + `.gitignore`, `capture.mjs`, the config, and (non-Node) `e2e/package.json`, without overwriting anything. Add `projects` entries to the config if browsers beyond Chromium were chosen. Never assemble these files by hand, and never touch the root `.gitignore`.
 
 ## 5. Report
 

@@ -25,7 +25,7 @@ Specs are committed source; screenshots never are. The `.gitignore` inside `e2e/
 
 | Component | Type | Purpose |
 |---|---|---|
-| `validating-in-browser` | Skill | Setup/bootstrap ladder (framework and browser choice included), `e2e/` + screenshot conventions, dev-server protocol, Puppeteer mode, and the read-every-screenshot validation and path-reporting protocol. |
+| `validating-in-browser` | Skill | Setup/bootstrap (framework and browser choice included), `e2e/` + screenshot conventions, dev-server protocol, Puppeteer mode, and the read-every-screenshot validation and path-reporting protocol. Ships two tools: `setup.mjs` (one-shot status + idempotent scaffolding) and `capture.mjs` (one-off screenshots, headless/headed, `--viewport` for mobile). |
 | `/e2e` | Command | Write/extend and run a Playwright spec for a flow (or your recent UI changes), capture screenshots, visually validate, report paths. |
 | `/e2e-screenshot` | Command | One-off full-page capture of a URL/route into `e2e/screenshots/` — no test file written. |
 | `/e2e-setup` | Command | Explicit one-time bootstrap: detect Playwright/Puppeteer, ask which framework (recommending Playwright) and which browsers to install, create the `e2e/` contract. |
@@ -61,6 +61,7 @@ The entire value of the harness is that the *main session* looks at the screensh
 ## Notes
 
 - Nothing is installed without your explicit go-ahead — you choose the browsers (Chromium recommended), and the first browser download is large (~150MB+).
+- Setup is mechanical, not improvised: a shipped `setup.mjs` reports full harness status in one command and idempotently creates every missing piece (safe on half-set-up projects; it never installs packages or overwrites files).
 - If your project already uses Puppeteer, the harness asks before adding Playwright and can run in Puppeteer mode instead — plain Node flow scripts with the same screenshot conventions.
 - The harness reuses an already-running dev server when it finds one; if it starts one itself, it tells you so in the report.
 - Runs are headless by default. Ask for headed (`/e2e --headed …`, `/e2e-screenshot --headed …`, or just say "run it headed") to watch the browser live — needs a display, and Claude still validates from the screenshots.

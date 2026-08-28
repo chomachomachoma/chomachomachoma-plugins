@@ -3,7 +3,7 @@ description: Write and run a Playwright e2e test for a flow, capture screenshots
 argument-hint: [--headed] [flow description, route, or URL]
 ---
 
-Run the end-to-end harness for a user flow. The `validating-in-browser` skill defines every convention used below — the setup ladder, the `e2e/` directory contract, the dev-server protocol, and the validation rules. Follow it exactly.
+Run the end-to-end harness for a user flow. The `validating-in-browser` skill defines every convention used below — setup and bootstrap, the `e2e/` directory contract, the dev-server protocol, and the validation rules. Follow it exactly.
 
 ## 1. Determine what to validate
 
@@ -20,7 +20,7 @@ Examples:
 
 ## 2. Bootstrap the harness
 
-Walk the skill's setup-detection ladder: reuse an existing harness or Playwright config if present; otherwise create the `e2e/` tree, config, and `e2e/screenshots/.gitignore` per the directory contract. Never install anything without telling the user what and why and getting a go-ahead.
+Run the skill's shipped scaffolder from the project root — `node "<skill base dir>/scripts/setup.mjs" --check` for status, then the same script (with `--base-url <detected url>` if it says a config is pending) to create everything missing. Don't assemble contract files by hand. Never install anything without telling the user what and why and getting a go-ahead.
 
 ## 3. Ensure the app is reachable
 

@@ -4,7 +4,7 @@ Copy-paste templates for the `validating-in-browser` harness. Replace placeholde
 
 ## Generated `e2e/playwright.config.ts`
 
-Only generate this when the project has no Playwright config of its own (setup ladder step 3). Replace `<DETECTED_URL>` with the URL you actually detected or started — never leave the placeholder in, and never guess `:3000`. For projects with no TypeScript signals, write the same config as `playwright.config.js` using `require`/`module.exports`.
+`setup.mjs` generates this automatically when a Playwright framework is installed, no config exists anywhere, and you pass `--base-url` (the detected URL — never a `:3000` guess; it picks `.ts` vs `.js` from `tsconfig.json`). Shown here for reference and for the multi-browser `projects` addition below — don't write it by hand.
 
 ```ts
 import { defineConfig } from '@playwright/test';
@@ -79,7 +79,7 @@ In non-Node self-contained mode the config and specs run from inside `e2e/`, so 
 
 ## Puppeteer-mode flow script (`e2e/<flow-name>.e2e.mjs`)
 
-Only for Puppeteer mode (setup ladder step 4, user kept their existing Puppeteer). Plain Node script — no config, no test runner. Run with `node e2e/<flow-name>.e2e.mjs` from the project root; a non-zero exit is a failure.
+Only for Puppeteer mode (the user kept their existing Puppeteer). Plain Node script — no config, no test runner. Run with `node e2e/<flow-name>.e2e.mjs` from the project root; a non-zero exit is a failure.
 
 ```js
 import assert from 'node:assert/strict';
@@ -116,13 +116,13 @@ For one-off screenshots when the `playwright screenshot` CLI won't do — it has
 cp "<skill-base-dir>/scripts/capture.mjs" e2e/capture.mjs
 ```
 
-Do this as part of creating the `e2e/` tree, so the file is already there when headed is requested. The script auto-detects the project's framework (`@playwright/test`, `playwright`, or `puppeteer` — the same file works unmodified in Puppeteer mode), runs headless by default, opens a visible browser with `E2E_HEADED=1`, and prints a clear install hint if no framework is present. Living in `e2e/`, it resolves the framework from the project's `node_modules` (or `e2e/node_modules` in self-contained mode) with no path tricks — a transient `npx playwright` run does not provide that install; if nothing is in `node_modules`, follow the setup ladder's install step (with consent) first.
+`setup.mjs` places it automatically, so it's already there when headed is requested. The script auto-detects the project's framework (`@playwright/test`, `playwright`, or `puppeteer` — the same file works unmodified in Puppeteer mode), runs headless by default, opens a visible browser with `E2E_HEADED=1`, takes `--viewport WxH` for mobile-sized captures, and prints a clear install hint if no framework is present. Living in `e2e/`, it resolves the framework from the project's `node_modules` (or `e2e/node_modules` in self-contained mode) with no path tricks — a transient `npx playwright` run does not provide that install; if nothing is in `node_modules`, follow the install decision (with consent) first.
 
-Invocation: `node e2e/capture.mjs "<url>" e2e/screenshots/<name>.png` from the project root (prefix `E2E_HEADED=1` for headed); in non-Node self-contained mode, `cd e2e && node capture.mjs "<url>" screenshots/<name>.png`.
+Invocation: `node e2e/capture.mjs "<url>" e2e/screenshots/<name>.png [--viewport 390x844]` from the project root (prefix `E2E_HEADED=1` for headed); in non-Node self-contained mode, `cd e2e && node capture.mjs "<url>" screenshots/<name>.png`.
 
 ## Non-Node `e2e/package.json`
 
-Only for projects with no root `package.json` (setup ladder step 6). Never create a root `package.json` for a non-Node project.
+Created by `setup.mjs` in projects with no root `package.json`. Never create a root `package.json` for a non-Node project.
 
 ```json
 {

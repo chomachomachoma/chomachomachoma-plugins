@@ -21,7 +21,7 @@ The optional `[name]` becomes the filename; otherwise derive a kebab-case name f
 
 ## 2. Ensure prerequisites
 
-Playwright must be available per the skill's setup ladder (consent before any install), and the app reachable per its dev-server protocol — resolve a bare route against the detected base URL. Ensure `e2e/screenshots/` and its `.gitignore` exist per the directory contract. Note the difference between the two capture paths: a headless CLI one-off is the single sanctioned exception to the ladder's install requirement — it may run off a transient npx download with nothing installed. The capture helper imports `@playwright/test` and therefore needs it actually present in `node_modules` — if it isn't and headed was requested, run the ladder's install step (with consent) first; in a Node project that's a root devDependency, never an `e2e/package.json`. If the user declines the install, say headed isn't possible without it and offer the headless CLI capture instead.
+Run the skill's `setup.mjs --check` (and then `setup.mjs --base-url <detected url>` to scaffold anything missing), and ensure the app is reachable per the dev-server protocol — resolve a bare route against the detected base URL. Note the difference between the two capture paths: a headless CLI one-off is the single sanctioned exception to the install requirement — it may run off a transient npx download with nothing installed. The capture helper imports the framework and therefore needs it actually present in `node_modules` — if it isn't and headed was requested, follow the skill's install decision (with consent) first; in a Node project that's a root devDependency, never an `e2e/package.json`. If the user declines the install, say headed isn't possible without it and offer the headless CLI capture instead.
 
 ## 3. Capture
 
@@ -31,11 +31,13 @@ Headless (the default):
 npx playwright screenshot --full-page "<url>" e2e/screenshots/<name>.png
 ```
 
-Headed — the CLI has no headed option, so use the shipped capture helper, which setup copies into the project as `e2e/capture.mjs` (if missing, `cp` it from the skill's `scripts/capture.mjs`; never write a script):
+Headed — the CLI has no headed option, so use the shipped capture helper, which `setup.mjs` already placed at `e2e/capture.mjs` (never write a script):
 
 ```
 E2E_HEADED=1 node e2e/capture.mjs "<url>" e2e/screenshots/<name>.png
 ```
+
+For a mobile-size capture (either mode), add `--viewport WxH`, e.g. `--viewport 390x844`.
 
 Mode variants: in non-Node self-contained mode, run either form from inside `e2e/` with the `e2e/` path prefixes dropped (`cd e2e && npx playwright screenshot --full-page "<url>" screenshots/<name>.png`, or `cd e2e && E2E_HEADED=1 node capture.mjs "<url>" screenshots/<name>.png`). In Puppeteer mode the Playwright CLI doesn't exist — use the capture helper (Puppeteer variant) for headless and headed alike.
 
