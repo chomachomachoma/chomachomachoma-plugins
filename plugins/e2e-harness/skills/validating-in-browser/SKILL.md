@@ -16,6 +16,7 @@ All harness output lives under `e2e/` in the project root:
 └── e2e/
     ├── playwright.config.ts     # generated only if the project has no Playwright config
     ├── <flow-name>.spec.ts      # accumulated regression specs — committed source
+    ├── capture.mjs              # one-off screenshot helper — created on first need
     ├── package.json             # ONLY in non-Node projects (self-contained install)
     └── screenshots/
         ├── .gitignore           # keeps every screenshot out of git
@@ -76,7 +77,7 @@ A model spec lives in `references/templates.md`.
 - Node projects with the generated config: `npx playwright test --config e2e/playwright.config.ts [spec-file]` from the project root. Adopted existing config: plain `npx playwright test [spec-file]`. Non-Node: `cd e2e && npx playwright test [spec-file]`.
 - On failure, classify before editing anything: **app bug** (the change broke the page — fix the app), **test bug** (bad locator, wrong assumption — fix the spec), or **environment bug** (server not running, wrong `E2E_BASE_URL` — fix the environment). Misclassifying wastes the whole loop.
 - Failure artifacts (screenshots, traces) land in `e2e/screenshots/artifacts/` — read those PNGs too; the failure screenshot usually shows exactly what went wrong.
-- **Headless by default, headed only on request.** When the user asks to watch the run (`--headed`, "run it headed"): Playwright → append `--headed` to the run command; Puppeteer mode → run with `E2E_HEADED=1` (the flow-script template reads it), e.g. `E2E_HEADED=1 E2E_BASE_URL=<url> node e2e/login.e2e.mjs`. Headed needs a display — check before launching (`DISPLAY`/`WAYLAND_DISPLAY` unset on Linux means none; SSH/CI), and if there is none, say so and run headless instead. Never switch to headed on your own: the screenshots are the evidence, not the live window.
+- **Headless by default, headed only on request.** When the user asks to watch the run (`--headed`, "run it headed"): Playwright → append `--headed` to the run command; Puppeteer mode → run with `E2E_HEADED=1` (the flow-script template reads it), e.g. `E2E_HEADED=1 E2E_BASE_URL=<url> node e2e/login.e2e.mjs`. For a headed one-off capture, the `playwright screenshot` CLI has no headed option — use the `e2e/capture.mjs` helper (template in `references/templates.md`), never an improvised script. Headed needs a display — check before launching (`DISPLAY`/`WAYLAND_DISPLAY` unset on Linux means none; SSH/CI), and if there is none, say so and run headless instead. Never switch to headed on your own: the screenshots are the evidence, not the live window.
 
 ## Visual validation protocol
 
@@ -124,4 +125,4 @@ The path list is the user's map to the evidence — omitting it is a reporting f
 | Run passed | Still read every screenshot before claiming a visual pass |
 | Reporting | Verdict per flow + absolute screenshot paths, always |
 
-For copy-paste templates — the generated `playwright.config.ts` (with multi-browser `projects`), a model spec file, the Puppeteer-mode flow script, the non-Node `e2e/package.json`, and the screenshots `.gitignore` — read `references/templates.md`.
+For copy-paste templates — the generated `playwright.config.ts` (with multi-browser `projects`), a model spec file, the Puppeteer-mode flow script, the `capture.mjs` one-off screenshot helper, the non-Node `e2e/package.json`, and the screenshots `.gitignore` — read `references/templates.md`.

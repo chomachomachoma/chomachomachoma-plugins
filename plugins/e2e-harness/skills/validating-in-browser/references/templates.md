@@ -102,6 +102,28 @@ try {
 }
 ```
 
+## Capture helper (`e2e/capture.mjs`)
+
+For one-off screenshots when the `playwright screenshot` CLI won't do — it has no headed option. Create this file the first time it's needed (it's committed, like specs) and reuse it; never improvise an ad-hoc script instead. Living in `e2e/`, it resolves `@playwright/test` from the project's `node_modules` (or `e2e/node_modules` in self-contained mode) with no path tricks. Works headless by default; `E2E_HEADED=1` opens a visible browser. In Puppeteer mode, change exactly two lines — the import (`import puppeteer from 'puppeteer';`) and the launch (`const browser = await puppeteer.launch({ headless: process.env.E2E_HEADED !== '1' });`) — and keep everything else, including `waitUntil: 'load'`, as written; that variant serves headless one-offs too, since the Playwright CLI doesn't exist there.
+
+```js
+import { chromium } from '@playwright/test';
+
+const [url, out] = process.argv.slice(2);
+if (!url || !out) {
+  console.error('usage: node e2e/capture.mjs <url> <out.png>');
+  process.exit(1);
+}
+const browser = await chromium.launch({ headless: process.env.E2E_HEADED !== '1' });
+const page = await browser.newPage();
+await page.goto(url, { waitUntil: 'load' });
+await page.screenshot({ path: out, fullPage: true });
+await browser.close();
+console.log(out);
+```
+
+Invocation: `node e2e/capture.mjs "<url>" e2e/screenshots/<name>.png` from the project root (prefix `E2E_HEADED=1` for headed); in non-Node self-contained mode, `cd e2e && node capture.mjs "<url>" screenshots/<name>.png`.
+
 ## Non-Node `e2e/package.json`
 
 Only for projects with no root `package.json` (setup ladder step 6). Never create a root `package.json` for a non-Node project.

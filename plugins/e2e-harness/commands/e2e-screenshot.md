@@ -1,20 +1,20 @@
 ---
 description: Capture a screenshot of a page in the running app and visually inspect it — no test file written
-argument-hint: <url-or-route> [name]
+argument-hint: [--headed] <url-or-route> [name]
 ---
 
 Take a one-off full-page screenshot for visual inspection. The `validating-in-browser` skill defines the conventions used below; no spec file is written.
 
 ## 1. Parse arguments
 
-`$ARGUMENTS` is `<url-or-route> [name]`. The URL or route is required — if missing, print this usage block and stop:
+`$ARGUMENTS` is `[--headed] <url-or-route> [name]`. A `--headed` flag requests a visible browser (per the skill's headed rule — needs a display, headless otherwise); strip it first. The URL or route is required — if missing, print this usage block and stop:
 
 ```
-Usage: /e2e-screenshot <url-or-route> [name]
+Usage: /e2e-screenshot [--headed] <url-or-route> [name]
 
 Examples:
   /e2e-screenshot /settings
-  /e2e-screenshot http://localhost:5173/checkout checkout-page
+  /e2e-screenshot --headed http://localhost:5173/checkout checkout-page
 ```
 
 The optional `[name]` becomes the filename; otherwise derive a kebab-case name from the route (`/settings/profile` → `settings-profile`).
@@ -25,11 +25,19 @@ Playwright must be available per the skill's setup ladder (consent before any in
 
 ## 3. Capture
 
+Headless (the default):
+
 ```
 npx playwright screenshot --full-page "<url>" e2e/screenshots/<name>.png
 ```
 
-Playwright's built-in CLI — no spec file needed for one-offs.
+Headed — the CLI has no headed option, so use the skill's capture helper (create `e2e/capture.mjs` from `references/templates.md` if it doesn't exist yet; never improvise a script):
+
+```
+E2E_HEADED=1 node e2e/capture.mjs "<url>" e2e/screenshots/<name>.png
+```
+
+Mode variants: in non-Node self-contained mode, run either form from inside `e2e/` with the `e2e/` path prefixes dropped (`cd e2e && npx playwright screenshot --full-page "<url>" screenshots/<name>.png`, or `cd e2e && E2E_HEADED=1 node capture.mjs "<url>" screenshots/<name>.png`). In Puppeteer mode the Playwright CLI doesn't exist — use the capture helper (Puppeteer variant) for headless and headed alike.
 
 ## 4. Inspect and report
 
