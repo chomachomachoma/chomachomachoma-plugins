@@ -52,7 +52,10 @@ test.describe('signup flow', () => {
     const pageErrors: string[] = [];
     page.on('pageerror', (err) => pageErrors.push(err.message));
     page.on('console', (msg) => {
-      if (msg.type() === 'error') pageErrors.push(msg.text());
+      // headed Chromium requests /favicon.ico (headless doesn't) — don't fail on that 404
+      if (msg.type() === 'error' && !msg.location().url?.endsWith('/favicon.ico')) {
+        pageErrors.push(msg.text());
+      }
     });
 
     await page.goto('/');
@@ -89,7 +92,10 @@ try {
   const pageErrors = [];
   page.on('pageerror', (err) => pageErrors.push(err.message));
   page.on('console', (msg) => {
-    if (msg.type() === 'error') pageErrors.push(msg.text());
+    // headed Chromium requests /favicon.ico (headless doesn't) — don't fail on that 404
+    if (msg.type() === 'error' && !msg.location()?.url?.endsWith('/favicon.ico')) {
+      pageErrors.push(msg.text());
+    }
   });
 
   await page.goto(`${BASE}/`, { waitUntil: 'networkidle0' });
@@ -104,23 +110,13 @@ try {
 
 ## Capture helper (`e2e/capture.mjs`)
 
-For one-off screenshots when the `playwright screenshot` CLI won't do — it has no headed option. Create this file the first time it's needed (it's committed, like specs) and reuse it; never improvise an ad-hoc script instead. Living in `e2e/`, it resolves `@playwright/test` from the project's `node_modules` (or `e2e/node_modules` in self-contained mode) with no path tricks — which means it requires a real install: a transient `npx playwright` run does not provide one, so if `@playwright/test` isn't in `node_modules`, follow the setup ladder's install step (with consent) before using this helper. Works headless by default; `E2E_HEADED=1` opens a visible browser. In Puppeteer mode, change exactly two lines — the import (`import puppeteer from 'puppeteer';`) and the launch (`const browser = await puppeteer.launch({ headless: process.env.E2E_HEADED !== '1' });`) — and keep everything else, including `waitUntil: 'load'`, as written; that variant serves headless one-offs too, since the Playwright CLI doesn't exist there.
+For one-off screenshots when the `playwright screenshot` CLI won't do — it has no headed option. The helper **ships with this plugin**: never write, retype, or adapt it — copy it verbatim from this skill's base directory (announced when the skill loads):
 
-```js
-import { chromium } from '@playwright/test';
-
-const [url, out] = process.argv.slice(2);
-if (!url || !out) {
-  console.error('usage: node e2e/capture.mjs <url> <out.png>');
-  process.exit(1);
-}
-const browser = await chromium.launch({ headless: process.env.E2E_HEADED !== '1' });
-const page = await browser.newPage();
-await page.goto(url, { waitUntil: 'load' });
-await page.screenshot({ path: out, fullPage: true });
-await browser.close();
-console.log(out);
 ```
+cp "<skill-base-dir>/scripts/capture.mjs" e2e/capture.mjs
+```
+
+Do this as part of creating the `e2e/` tree, so the file is already there when headed is requested. The script auto-detects the project's framework (`@playwright/test`, `playwright`, or `puppeteer` — the same file works unmodified in Puppeteer mode), runs headless by default, opens a visible browser with `E2E_HEADED=1`, and prints a clear install hint if no framework is present. Living in `e2e/`, it resolves the framework from the project's `node_modules` (or `e2e/node_modules` in self-contained mode) with no path tricks — a transient `npx playwright` run does not provide that install; if nothing is in `node_modules`, follow the setup ladder's install step (with consent) first.
 
 Invocation: `node e2e/capture.mjs "<url>" e2e/screenshots/<name>.png` from the project root (prefix `E2E_HEADED=1` for headed); in non-Node self-contained mode, `cd e2e && node capture.mjs "<url>" screenshots/<name>.png`.
 

@@ -20,7 +20,7 @@ Before installing anything, ask in one prompt: a go-ahead for `@playwright/test`
 
 ## 4. Create the contract
 
-Create whatever the ladder calls for that doesn't already exist: the `e2e/` directory, the generated config (with `projects` entries if browsers beyond Chromium were chosen), and `e2e/screenshots/` with its `.gitignore`. Never clobber an existing config, and never touch the root `.gitignore`.
+Create whatever the ladder calls for that doesn't already exist: the `e2e/` directory, the generated config (with `projects` entries if browsers beyond Chromium were chosen), `e2e/screenshots/` with its `.gitignore`, and `e2e/capture.mjs` copied verbatim from the skill's `scripts/` directory (never written by hand). Never clobber an existing config, and never touch the root `.gitignore`.
 
 ## 5. Report
 

@@ -11,7 +11,7 @@ Everything the harness creates lives under `e2e/` in your project root:
 └── e2e/
     ├── playwright.config.ts     # generated only if you have no Playwright config
     ├── <flow-name>.spec.ts      # accumulated regression specs — committed source
-    ├── capture.mjs              # one-off screenshot helper — created on first need
+    ├── capture.mjs              # one-off screenshot helper — shipped with the plugin, copied at setup
     ├── package.json             # only in non-Node projects (self-contained install)
     └── screenshots/
         ├── .gitignore           # "*" + "!.gitignore" — screenshots never reach git

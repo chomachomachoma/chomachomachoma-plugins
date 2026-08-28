@@ -31,7 +31,7 @@ Headless (the default):
 npx playwright screenshot --full-page "<url>" e2e/screenshots/<name>.png
 ```
 
-Headed — the CLI has no headed option, so use the skill's capture helper (create `e2e/capture.mjs` from `references/templates.md` if it doesn't exist yet; never improvise a script):
+Headed — the CLI has no headed option, so use the shipped capture helper, which setup copies into the project as `e2e/capture.mjs` (if missing, `cp` it from the skill's `scripts/capture.mjs`; never write a script):
 
 ```
 E2E_HEADED=1 node e2e/capture.mjs "<url>" e2e/screenshots/<name>.png
