@@ -36,7 +36,7 @@ Point `/path/to/chomachomachoma-plugins` at your local checkout of this repo. Ev
 |---|---|---|
 | [`god-tier-wordpress`](plugins/god-tier-wordpress) | All-knowing WordPress developer for core, theme, and plugin work — auto-loads WordPress-specific knowledge and enforces security, coding-standards, and accessibility rules while you write or review code. | 3 skills (`wordpress-development`, `wordpress-security`, `wordpress-accessibility`), `wp-reviewer` agent (read-only by construction — no Write/Edit tools; Bash for git/grep inspection only), 3 commands (`/wp-review`, `/wp-security-audit`, `/wp-scaffold`) |
 | [`doc-assistant`](plugins/doc-assistant) | Token-efficient documentation manager — maintains an indexed `docs/` tree, updates it incrementally from diffs, and reminds you when docs drift from code. | `managing-docs` skill, `doc-manager` agent, 3 commands (`/docs-init`, `/docs-update`, `/docs-check`), Stop/PostToolUse drift-reminder hooks |
-| [`e2e-harness`](plugins/e2e-harness) | Browser-testing harness for visual validation — writes and runs Playwright tests, captures screenshots Claude reads before claiming anything works, and grows a persistent `e2e/` regression suite in your project. | `validating-in-browser` skill, 2 commands (`/e2e`, `/e2e-screenshot`) |
+| [`e2e-harness`](plugins/e2e-harness) | Browser-testing harness for visual validation — writes and runs Playwright tests, captures screenshots Claude reads before claiming anything works, and grows a persistent `e2e/` regression suite in your project. | `validating-in-browser` skill, 3 commands (`/e2e`, `/e2e-screenshot`, `/e2e-setup`) |
 
 ## god-tier-wordpress
 
@@ -97,6 +97,11 @@ Bootstraps Playwright if needed (asking before installing anything), writes or e
 /e2e-screenshot /settings
 ```
 One-off full-page capture of a route in your running app — inspects the image and reports its path, no test file written.
+
+```
+/e2e-setup
+```
+Explicit one-time bootstrap: detects Playwright or Puppeteer, asks which framework to use (recommending Playwright) and which browsers to install, and creates the `e2e/` tree without running a test. Optional — the same setup happens lazily on first `/e2e` run.
 
 You can also skip the commands — after Claude changes UI code, the `validating-in-browser` skill loads automatically when it needs to visually confirm the work.
 

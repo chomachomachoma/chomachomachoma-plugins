@@ -24,9 +24,10 @@ Specs are committed source; screenshots never are. The `.gitignore` inside `e2e/
 
 | Component | Type | Purpose |
 |---|---|---|
-| `validating-in-browser` | Skill | Setup/bootstrap ladder, `e2e/` + screenshot conventions, dev-server protocol, and the read-every-screenshot validation and path-reporting protocol. |
+| `validating-in-browser` | Skill | Setup/bootstrap ladder (framework and browser choice included), `e2e/` + screenshot conventions, dev-server protocol, Puppeteer mode, and the read-every-screenshot validation and path-reporting protocol. |
 | `/e2e` | Command | Write/extend and run a Playwright spec for a flow (or your recent UI changes), capture screenshots, visually validate, report paths. |
 | `/e2e-screenshot` | Command | One-off full-page capture of a URL/route into `e2e/screenshots/` — no test file written. |
+| `/e2e-setup` | Command | Explicit one-time bootstrap: detect Playwright/Puppeteer, ask which framework (recommending Playwright) and which browsers to install, create the `e2e/` contract. |
 
 ## Usage examples
 
@@ -45,6 +46,11 @@ With no arguments, infers what to validate from your recent UI changes (diff, st
 ```
 Captures a full-page screenshot of the route in your running app, inspects it, and reports the path — no test file written.
 
+```
+/e2e-setup
+```
+Bootstraps the harness up front: detects what's installed, asks which framework to use if the project already has Puppeteer (recommending Playwright), asks which browsers to install (Chromium recommended), and creates the `e2e/` tree — without running a test.
+
 You can also skip the commands entirely — after Claude changes UI code, the `validating-in-browser` skill loads automatically when it needs to visually confirm the work, and the same conventions apply.
 
 ## Why no agent?
@@ -53,6 +59,7 @@ The entire value of the harness is that the *main session* looks at the screensh
 
 ## Notes
 
-- Playwright and its Chromium browser are only installed with your explicit go-ahead — the first Chromium download is large (~150MB).
+- Nothing is installed without your explicit go-ahead — you choose the browsers (Chromium recommended), and the first browser download is large (~150MB+).
+- If your project already uses Puppeteer, the harness asks before adding Playwright and can run in Puppeteer mode instead — plain Node flow scripts with the same screenshot conventions.
 - The harness reuses an already-running dev server when it finds one; if it starts one itself, it tells you so in the report.
 - Screenshot paths are always listed in the final response, pass or fail, so you can open the evidence yourself.

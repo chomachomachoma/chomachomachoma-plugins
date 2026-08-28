@@ -35,7 +35,7 @@
       "version": "1.0.0",
       "author": { "name": "Chris Choma", "email": "c.j.choma@gmail.com" },
       "category": "testing",
-      "keywords": ["playwright", "e2e", "browser-testing", "screenshots", "visual-validation", "regression"]
+      "keywords": ["playwright", "puppeteer", "e2e", "browser-testing", "screenshots", "visual-validation", "regression"]
     }
   ]
 }

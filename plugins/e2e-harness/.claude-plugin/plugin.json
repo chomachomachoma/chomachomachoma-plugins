@@ -5,5 +5,5 @@
   "author": { "name": "Chris Choma", "email": "c.j.choma@gmail.com" },
   "homepage": "https://github.com/chomachomachoma/chomachomachoma-plugins",
   "license": "MIT",
-  "keywords": ["playwright", "e2e", "browser-testing", "screenshots"]
+  "keywords": ["playwright", "puppeteer", "e2e", "browser-testing", "screenshots"]
 }

@@ -1,6 +1,6 @@
 ---
 name: validating-in-browser
-description: Use when verifying frontend or UI work in a real browser — after implementing, changing, or fixing UI code and needing to visually confirm it renders and behaves correctly, when asked to screenshot a page or test a user flow, or when writing/running end-to-end browser tests — covers Playwright setup, the e2e/ suite and screenshot conventions, and reading screenshots to validate visually.
+description: Use when verifying frontend or UI work in a real browser — after implementing, changing, or fixing UI code and needing to visually confirm it renders and behaves correctly, when asked to screenshot a page or test a user flow, or when writing/running end-to-end browser tests — covers Playwright (or Puppeteer) setup, the e2e/ suite and screenshot conventions, and reading screenshots to validate visually.
 ---
 
 # Validating In Browser
@@ -23,7 +23,7 @@ All harness output lives under `e2e/` in the project root:
         └── artifacts/           # Playwright outputDir: failure shots, traces
 ```
 
-- Screenshot filenames are deterministic and descriptive: `<spec>--<step>.png`, kebab-case (e.g. `checkout--cart-filled.png`, `login--after-submit.png`). Deterministic paths are what make the PNGs readable and reportable — never rely on Playwright's run-dependent artifact paths for screenshots you intend to look at.
+- Screenshot filenames are deterministic and descriptive: `<spec>--<step>.png`, kebab-case (e.g. `checkout--cart-filled.png`, `login--after-submit.png`). When the config defines multiple browser `projects`, every explicit screenshot path appends the browser: `<spec>--<step>--<browser>.png` via `test.info().project.name` — otherwise browsers overwrite each other's PNGs. Deterministic paths are what make the PNGs readable and reportable — never rely on Playwright's run-dependent artifact paths for screenshots you intend to look at.
 - `e2e/screenshots/.gitignore` contains exactly:
 
   ```
@@ -41,8 +41,19 @@ Work down this ladder and stop at the first step that applies:
 1. **Harness already set up** — `e2e/` exists with a config and `npx playwright --version` succeeds → just run.
 2. **Project already uses Playwright with its own config** (`playwright.config.{ts,js,mjs}` at root or elsewhere) → adopt it: write new specs into **its** `testDir` (not `e2e/`), run with plain `npx playwright test`, and add only the `e2e/screenshots/` directory + `.gitignore` convention — screenshot paths in specs stay `e2e/screenshots/...`, resolved from the project root. Use its `baseURL` as-is; only pass `E2E_BASE_URL` if that config reads it, and if it defines neither, navigate with absolute URLs built from the detected server URL rather than editing the user's config. Never clobber or duplicate an existing config.
 3. **`@playwright/test` installed but no config** (check `package.json` and `node_modules/@playwright/test`) → generate `e2e/playwright.config.ts` from `references/templates.md`. Use `.js` instead if the project shows no TypeScript signals (no tsconfig, no `.ts` sources) — the same rule applies to spec files.
-4. **Nothing installed, root `package.json` exists** → **tell the user what you're about to install and why, and get a go-ahead first** — `@playwright/test` as a devDependency plus a Chromium download that is large (~150MB) and slow the first time. Detect the package manager from the lockfile (`pnpm-lock.yaml` → pnpm, `yarn.lock` → yarn, `bun.lock`/`bun.lockb` → bun, else npm), then `<pm> add -D @playwright/test` and `npx playwright install chromium` (Chromium only — smallest useful footprint; on bare Linux hosts `--with-deps` may be needed). Then generate the config per step 3.
-5. **Non-Node project** (no root `package.json`) → never create one. With the same consent as step 4, create a self-contained `e2e/package.json` (template in `references/templates.md`), then from inside `e2e/`: `npm install`, `npx playwright install chromium`, and generate the config per step 3. Run with `cd e2e && npx playwright test` (screenshot paths then resolve relative to `e2e/`).
+4. **Puppeteer present, Playwright absent** (`puppeteer` in `package.json`/`node_modules`) → don't silently install a second framework. Tell the user what you found and ask which to use, recommending Playwright for its better fit here (auto-waiting, built-in test runner and assertions, multi-browser) while offering to reuse their existing Puppeteer. Playwright → continue down the ladder (this choice may be folded into step 5's install prompt as one question set); Puppeteer → use Puppeteer mode (below), no install needed.
+5. **Nothing installed, root `package.json` exists** → **ask the user before installing** — in one prompt, get a go-ahead (`@playwright/test` as a devDependency plus a browser download that is large, ~150MB+, and slow the first time) and ask **which browsers to install**: Chromium (recommended default), Firefox, and/or WebKit. Detect the package manager from the lockfile (`pnpm-lock.yaml` → pnpm, `yarn.lock` → yarn, `bun.lock`/`bun.lockb` → bun, else npm), then `<pm> add -D @playwright/test` and `npx playwright install <chosen browsers>` (on bare Linux hosts `--with-deps` may be needed). Then generate the config per step 3 — if anything beyond Chromium was chosen, add a `projects` entry per chosen browser (see `references/templates.md`).
+6. **Non-Node project** (no root `package.json`) → never create one. With the same consent and browser question as step 5, create a self-contained `e2e/package.json` (template in `references/templates.md`), then from inside `e2e/`: `npm install`, `npx playwright install <chosen browsers>`, and generate the config per step 3. Run with `cd e2e && npx playwright test` (screenshot paths then resolve relative to `e2e/`).
+
+The `/e2e-setup` command walks this ladder explicitly for users who want to bootstrap the harness up front rather than on first validation.
+
+## Puppeteer mode
+
+Only when the project already uses Puppeteer and the user chose to keep it. The directory contract, dev-server protocol, visual validation protocol, and reporting rules all apply unchanged; what changes:
+
+- Flows are plain Node scripts, `e2e/<flow-name>.e2e.mjs` (template in `references/templates.md`), using `node:assert` for assertions and the same console/pageerror listeners and named screenshots.
+- Run with `node e2e/<flow-name>.e2e.mjs` from the project root; the script reads `E2E_BASE_URL`. No config file is generated.
+- Puppeteer uses its own bundled Chrome — never run `npx playwright install` in this mode.
 
 ## Dev server protocol
 
@@ -92,7 +103,7 @@ The path list is the user's map to the evidence — omitting it is a reporting f
 - **Treating a green run as a visual pass.** Assertions can't see a broken layout. Only reading the screenshot can.
 - **Force-committing screenshots.** The `.gitignore` exists so screenshots never clog the repo — don't `git add -f` them, and don't move screenshots outside `e2e/screenshots/` to dodge it.
 - **Rewriting existing specs from scratch.** Extend the flow's spec; wholesale rewrites discard accumulated coverage and produce noisy diffs.
-- **Installing without consent.** The Playwright + Chromium install is big; any ladder step that installs (4 and 5) requires telling the user first.
+- **Installing without consent.** The Playwright + browser install is big; any ladder step that installs (5 and 6) requires telling the user first — and installing Playwright alongside an existing Puppeteer without asking skips step 4's choice.
 - **Assuming the app runs on `:3000`.** Detect, probe, or ask — never hard-code a port guess into a config or spec.
 - **Delegating the looking to a subagent.** A subagent's read of a PNG produces visual understanding only inside the subagent; you get a text summary back. The main session must read the screenshots itself.
 
@@ -101,12 +112,14 @@ The path list is the user's map to the evidence — omitting it is a reporting f
 | Situation | Action |
 |---|---|
 | Just finished UI work | Write/extend a spec for the flow, run it, read the screenshots |
-| No Playwright in project | Walk the setup ladder; ask before installing anything |
+| No Playwright in project | Walk the setup ladder; ask before installing anything (browsers included) |
 | Project already has a Playwright config | Adopt it; add only `e2e/screenshots/` + `.gitignore` |
+| Project uses Puppeteer, no Playwright | Ask which framework; recommend Playwright, honor Puppeteer mode if chosen |
+| User wants setup up front | Point at (or follow) `/e2e-setup` |
 | Non-Node project | Self-contained `e2e/package.json`; never create a root one |
 | Need the app running | Probe for a running server first; start one in the background only if none |
 | Run failed | Classify app / test / environment bug; read the artifact PNGs |
 | Run passed | Still read every screenshot before claiming a visual pass |
 | Reporting | Verdict per flow + absolute screenshot paths, always |
 
-For copy-paste templates — the generated `playwright.config.ts`, a model spec file, the non-Node `e2e/package.json`, and the screenshots `.gitignore` — read `references/templates.md`.
+For copy-paste templates — the generated `playwright.config.ts` (with multi-browser `projects`), a model spec file, the Puppeteer-mode flow script, the non-Node `e2e/package.json`, and the screenshots `.gitignore` — read `references/templates.md`.
