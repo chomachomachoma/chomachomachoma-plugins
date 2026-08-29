@@ -1,13 +1,13 @@
 ---
 description: Write and run a Playwright e2e test for a flow, capture screenshots, and visually validate the result
-argument-hint: [--headed] [flow description, route, or URL]
+argument-hint: [--headed] [--slowmo <ms>] [flow description, route, or URL]
 ---
 
 Run the end-to-end harness for a user flow. The `validating-in-browser` skill defines every convention used below — setup and bootstrap, the `e2e/` directory contract, the dev-server protocol, and the validation rules. Follow it exactly.
 
 ## 1. Determine what to validate
 
-A `--headed` flag anywhere in `$ARGUMENTS` requests a visible browser for this run (per the skill's headed rule — needs a display, headless otherwise); strip it, then parse the rest as a flow description, a route (`/settings/profile`), or a full URL. If nothing remains, derive the target from recent UI changes: `git diff HEAD`, staged changes, and untracked frontend files. If there are no arguments AND no recent UI changes to infer from, print this usage block and stop:
+A `--headed` flag anywhere in `$ARGUMENTS` requests a visible browser for this run (per the skill's headed rule — needs a display, headless otherwise; headed runs default to `E2E_SLOWMO=500` watchable pacing), and an optional `--slowmo <ms>` overrides that pace (`0` = full speed). Strip both, then parse the rest as a flow description, a route (`/settings/profile`), or a full URL. If nothing remains, derive the target from recent UI changes: `git diff HEAD`, staged changes, and untracked frontend files. If there are no arguments AND no recent UI changes to infer from, print this usage block and stop:
 
 ```
 Usage: /e2e [--headed] [flow description, route, or URL]

@@ -65,4 +65,6 @@ The entire value of the harness is that the *main session* looks at the screensh
 - If your project already uses Puppeteer, the harness asks before adding Playwright and can run in Puppeteer mode instead — plain Node flow scripts with the same screenshot conventions.
 - The harness reuses an already-running dev server when it finds one; if it starts one itself, it tells you so in the report.
 - Runs are headless by default. Ask for headed (`/e2e --headed …`, `/e2e-screenshot --headed …`, or just say "run it headed") to watch the browser live — needs a display, and Claude still validates from the screenshots.
+- Headed runs are paced for watching: actions slow to 500ms by default, and one-off captures hold the window open 3s. Ask for a speed ("slower", "full speed", or `/e2e --headed --slowmo 1000 …`) to override.
+- Self-signed dev certificates (local HTTPS, mkcert-less setups) are accepted automatically by the generated config and the capture helper.
 - Screenshot paths are always listed in the final response, pass or fail, so you can open the evidence yourself.
