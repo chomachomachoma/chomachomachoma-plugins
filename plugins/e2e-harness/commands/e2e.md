@@ -36,4 +36,4 @@ Run the spec — headed if requested, headless otherwise. On failure, classify a
 
 ## 6. Report
 
-End with: a verdict per flow (what was checked and what the screenshots show), whether you started a dev server (and its URL), and a `Screenshots:` list of the absolute path of every PNG captured, each with a one-line description. The path list is mandatory even when the run failed.
+End with: a verdict per flow (what was checked and what the screenshots show), whether you started a dev server (and its URL), and a `Screenshots:` list per the skill's reporting rule — project-relative path per line (clickable in the terminal), absolute directory stated once after the list. The path list is mandatory even when the run failed.
