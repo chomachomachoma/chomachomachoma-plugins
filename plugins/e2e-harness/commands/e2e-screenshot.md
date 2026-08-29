@@ -45,4 +45,4 @@ Mode variants: in non-Node self-contained mode, run either form from inside `e2e
 
 ## 4. Inspect and report
 
-Read the PNG with the Read tool. Describe what's visible and anything that looks wrong (broken layout, error states, blank regions), and end with the screenshot's project-relative path (clickable in the terminal) plus its absolute directory on a separate line so the user can open it from anywhere.
+Read the PNG with the Read tool. Describe what's visible and anything that looks wrong (broken layout, error states, blank regions), and end with the screenshot's absolute path so the user can open it.

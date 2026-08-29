@@ -35,7 +35,7 @@ Specs are committed source; screenshots never are. The `.gitignore` inside `e2e/
 ```
 /e2e signup flow — fill the form and submit
 ```
-Bootstraps Playwright if needed (asking first), writes or extends `e2e/signup.spec.ts`, runs it against your dev server, reads the captured screenshots, and reports a verdict plus a clickable path for every screenshot.
+Bootstraps Playwright if needed (asking first), writes or extends `e2e/signup.spec.ts`, runs it against your dev server, reads the captured screenshots, and reports a verdict plus every screenshot's absolute path.
 
 ```
 /e2e

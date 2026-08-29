@@ -104,7 +104,7 @@ Claiming a visual pass without having read the screenshots is a protocol violati
 The final response to the user MUST include, even when the run failed:
 
 - A verdict per validated flow (what was checked, what the screenshots show, pass or fail).
-- A `Screenshots:` list with the **project-relative path** of every PNG captured this session (e.g. `e2e/screenshots/checkout--cart-filled.png`), one per line with a one-line description — relative paths are what the terminal renders as clickable links, and long absolute paths wrap and break the link. State the absolute location once, as a single line after the list (`All under <project-root>/e2e/screenshots/`), so files are findable outside the terminal too.
+- A `Screenshots:` list with the **absolute path** of every PNG captured this session, each with a one-line description of what it shows.
 - Whether you started a dev server (and its URL) so the user knows it's still running.
 
 The path list is the user's map to the evidence — omitting it is a reporting failure even if everything passed.
@@ -137,6 +137,6 @@ The path list is the user's map to the evidence — omitting it is a reporting f
 | Need the app running | Probe for a running server first; start one in the background only if none |
 | Run failed | Classify app / test / environment bug; read the artifact PNGs |
 | Run passed | Still read every screenshot before claiming a visual pass |
-| Reporting | Verdict per flow + clickable relative screenshot paths (+ absolute dir once), always |
+| Reporting | Verdict per flow + absolute screenshot paths, always |
 
 For copy-paste templates — the generated `playwright.config.ts` (with multi-browser `projects`), a model spec file, the Puppeteer-mode flow script, the `capture.mjs` one-off screenshot helper, the non-Node `e2e/package.json`, and the screenshots `.gitignore` — read `references/templates.md`.
